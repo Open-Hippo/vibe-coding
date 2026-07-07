@@ -79,7 +79,7 @@ Replace `<YOUR-HIPPO-API-TOKEN>` with your token.
 **macOS / Linux:**
 
 ```bash
-ANTHROPIC_BASE_URL=https://staging.api.openhippo.io \
+ANTHROPIC_BASE_URL=https://api.openhippo.io \
 ANTHROPIC_AUTH_TOKEN=<YOUR-HIPPO-API-TOKEN> \
 ANTHROPIC_MODEL=hippo-coding \
 ANTHROPIC_SMALL_FAST_MODEL=hippo-chat-large \
@@ -89,7 +89,7 @@ claude
 **Windows (PowerShell):**
 
 ```powershell
-$env:ANTHROPIC_BASE_URL="https://staging.api.openhippo.io"
+$env:ANTHROPIC_BASE_URL="https://api.openhippo.io"
 $env:ANTHROPIC_AUTH_TOKEN="<YOUR-HIPPO-API-TOKEN>"
 $env:ANTHROPIC_MODEL="hippo-coding"
 $env:ANTHROPIC_SMALL_FAST_MODEL="hippo-chat-large"
@@ -102,7 +102,7 @@ To avoid retyping, save it once in `~/.claude/settings.json`
 ```json
 {
   "env": {
-    "ANTHROPIC_BASE_URL": "https://staging.api.openhippo.io",
+    "ANTHROPIC_BASE_URL": "https://api.openhippo.io",
     "ANTHROPIC_AUTH_TOKEN": "<YOUR-HIPPO-API-TOKEN>",
     "ANTHROPIC_MODEL": "hippo-coding",
     "ANTHROPIC_SMALL_FAST_MODEL": "hippo-chat-large"
@@ -124,7 +124,7 @@ Save this as `opencode.json` in your project folder:
       "npm": "@ai-sdk/anthropic",
       "name": "OpenHippo",
       "options": {
-        "baseURL": "https://staging.api.openhippo.io/v1",
+        "baseURL": "https://api.openhippo.io/v1",
         "apiKey": "{env:HIPPO_API_TOKEN}"
       },
       "models": {
