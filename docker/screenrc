@@ -1,0 +1,8 @@
+# screen config tuned for long/overnight agent sessions.
+defscrollback 100000          # keep a lot of history — overnight runs are chatty
+startup_message off
+defutf8 on
+altscreen on                  # restore the shell view cleanly after full-screen apps (claude/vim)
+term xterm-256color
+# A visible status line: session name · windows · clock.
+hardstatus alwayslastline "%{= kG}[%S] %{= kw}%-w%{= bW}%n %t%{-}%+w %= %{= kG}%c"

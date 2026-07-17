@@ -1,0 +1,38 @@
+# A long-running coding box you keep up and exec into for remote / overnight agent runs.
+#
+#   docker compose -f docker/docker-compose.yml up -d          # start it, detached
+#   docker compose -f docker/docker-compose.yml exec box zsh   # get a shell
+#     $ screen -S work            # start a named session
+#     $ claude                    # …drive Claude Code, or:
+#     $ opencode run "…"          # …kick off an overnight run
+#     Ctrl-a d                    # detach — the run keeps going after you disconnect
+#   docker compose -f docker/docker-compose.yml exec box screen -r work   # reattach later
+#
+# The container stays alive (CMD `sleep infinity`), so your screen sessions and their agent
+# runs survive `docker exec` disconnects and host SSH drops. `restart: unless-stopped` brings
+# it back after a host reboot.
+services:
+  box:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Or pull the published image instead of building:
+    image: ghcr.io/open-hippo/vibe-coding/box:latest
+    restart: unless-stopped
+    # Persist home so ~/.claude, ~/.config/opencode, auth, npm globals and your work survive
+    # rebuilds and restarts.
+    volumes:
+      - box-home:/home/dev
+      # Optional: mount a project to work on it directly from the host.
+      # - ../:/workspace
+    # working_dir: /workspace
+    # Pass your keys in from the host env or an .env file next to this compose file.
+    environment:
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+    # Keep an interactive TTY available for `exec … zsh`.
+    stdin_open: true
+    tty: true
+
+volumes:
+  box-home:
