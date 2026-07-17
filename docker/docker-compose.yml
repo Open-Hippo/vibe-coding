@@ -12,19 +12,19 @@
 # runs survive `docker exec` disconnects and host SSH drops. `restart: unless-stopped` brings
 # it back after a host reboot.
 services:
-  box:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  sandbox:
+    #build:
+    #  context: .
+    #  dockerfile: Dockerfile
     # Or pull the published image instead of building:
     image: ghcr.io/open-hippo/vibe-coding/box:latest
     restart: unless-stopped
     # Persist home so ~/.claude, ~/.config/opencode, auth, npm globals and your work survive
     # rebuilds and restarts.
     volumes:
-      - box-home:/home/dev
+      #- box-home:/home/dev
       # Optional: mount a project to work on it directly from the host.
-      # - ../:/workspace
+      - ../:/workspace
     # working_dir: /workspace
     # Pass your keys in from the host env or an .env file next to this compose file.
     environment:
