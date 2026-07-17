@@ -5,10 +5,10 @@
 	// Build the image locally from .devcontainer/Dockerfile (the original Python base:
 	// mcr.microsoft.com/devcontainers/python:3.12-trixie). This does NOT pull the pre-built
 	// image published to GHCR.
-	"build": { "dockerfile": "Dockerfile" },
+	//"build": { "dockerfile": "Dockerfile" },
 	// To use the pre-built GHCR image instead (skips the local build), replace the
 	// "build" line above with:
-	//   "image": "ghcr.io/open-hippo/vibe-coding/devcontainer:latest"
+	"image": "mcr.microsoft.com/devcontainers/python:3.12-trixie",
 
 	// Docker-in-Docker so `supabase start` can run the full local Supabase stack
 	// (Postgres + edge runtime + Realtime + Studio) inside the container, reachable at
@@ -40,11 +40,5 @@
 
 	// Install the sandbox toolchain (Node/npx, claude, uv, supabase, stripe, Playwright).
 	// All logic lives in setup.sh so this file stays minimal; the script is idempotent.
-	"postCreateCommand": "bash .devcontainer/setup.sh",
-
-	// Stripe TEST creds come from a git-ignored env file (Supabase is local — no remote creds).
-	// Copy sandbox.env.example -> sandbox.env and fill it BEFORE opening the container
-	// (the file must exist or container creation fails). Claude auth is intentionally NOT
-	// here — you start the claude session yourself on your subscription.
-	"runArgs": ["--env-file", "${localWorkspaceFolder}/.devcontainer/sandbox.env"]
+	"postCreateCommand": "bash .devcontainer/setup.sh"
 }
