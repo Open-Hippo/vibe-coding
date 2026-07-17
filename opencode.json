@@ -10,7 +10,7 @@
         "apiKey": "{env:OPENAI_API_KEY}"
       },
       "models": {
-        "moonshotai/Kimi-K2.7-Code-1100B": {
+        "qwen/Qwen3.6-27B": {
           "name": "qwen/Qwen3.6-27B"
         }
       }

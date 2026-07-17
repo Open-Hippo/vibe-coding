@@ -1,16 +1,58 @@
-# Coding box
+# Preloaded environments
 
-A small, self-contained image for **remote and overnight AI agent runs**. Ubuntu 24.04 with
-node/npm, python + **uv**, **Claude Code**, **opencode**, **Playwright + Chromium**, and
-**`screen`**. Everything is installed at build time — bring the container up, `exec` in, start
-a `screen` session, run an agent, detach, and reattach whenever you like.
+Two ready-to-go setups with the AI coding toolchain baked in — node/npm, python + **uv**,
+**Claude Code**, **opencode**, and **Playwright + Chromium** — so you don't install anything by
+hand. Pick the one that matches how you want to work:
 
-Deliberately simple: **no docker-in-docker**, no supabase/stripe — just the coding toolchain.
+| | **Devcontainer** | **Standalone box** |
+|---|---|---|
+| Where | [`.devcontainer/`](../.devcontainer/) | [`docker/`](.) (this folder) |
+| Best for | interactive dev inside **VS Code** | **remote / overnight** agent runs over SSH |
+| Extras | + Supabase CLI, Stripe CLI, headroom, docker-in-docker | just the coding toolchain (no dind) |
+| Started by | "Reopen in Container" | `docker compose up -d` + `screen` |
 
-Published to `ghcr.io/open-hippo/vibe-coding/box` by
-[`.github/workflows/box-image.yml`](../.github/workflows/box-image.yml).
+Both run agents against your own Claude/opencode auth (or free
+[OpenHippo](https://openhippo.io) models — see the [root README](../README.md)).
 
-## Quick start
+---
+
+## Option A — Devcontainer (VS Code)
+
+The full sandbox. Opens the repo inside a container with the whole toolchain plus a local
+Supabase stack (docker-in-docker), so `supabase start`, Stripe test mode, etc. all work.
+
+**Setup**
+
+1. Install [VS Code](https://code.visualstudio.com/) + the
+   [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+   and have Docker Desktop running.
+2. Copy the env template so container creation doesn't fail on a missing file:
+   ```sh
+   cp .devcontainer/sandbox.env.example .devcontainer/sandbox.env
+   # fill in Stripe TEST creds if you need them (Supabase is local — no remote creds)
+   ```
+3. Open the repo in VS Code → **"Reopen in Container"** (command palette:
+   *Dev Containers: Reopen in Container*).
+
+The devcontainer **builds locally** from [`.devcontainer/Dockerfile`](../.devcontainer/Dockerfile)
+and runs [`.devcontainer/setup.sh`](../.devcontainer/setup.sh) to install the toolchain
+(idempotent — rebuilds are cheap). It's configured with `shutdownAction: none`, so unattended
+`screen`/`claude` sessions keep running when the VS Code window closes. Then open a terminal and
+run `claude` or `opencode`.
+
+> The prebuilt GHCR image below (`…/box`) is **only** for the standalone setup — the
+> devcontainer intentionally stays a local build.
+
+---
+
+## Option B — Standalone box (remote / overnight)
+
+A small, self-contained image for **remote and overnight agent runs** — Ubuntu 24.04 with the
+coding toolchain and **`screen`** for detachable sessions. Deliberately simple: **no
+docker-in-docker**, no supabase/stripe. Published to
+`ghcr.io/open-hippo/vibe-coding/box` by [`box-image.yml`](../.github/workflows/box-image.yml).
+
+### Quick start
 
 ```sh
 # start the box (detached, stays up)
@@ -36,7 +78,7 @@ docker compose -f docker/docker-compose.yml exec box screen -r work
 screen -ls                # list your sessions
 ```
 
-## Overnight runs
+### Overnight runs
 
 Because the container stays alive (`sleep infinity`) and the agent runs inside `screen`, the
 run survives `docker exec` disconnects and host SSH drops. `restart: unless-stopped` brings the
@@ -49,7 +91,7 @@ screen -S nightly -L -Logfile ~/nightly.log -dm \
 docker compose -f docker/docker-compose.yml exec box screen -r nightly
 ```
 
-## Credentials
+### Credentials
 
 Home is a named volume (`box-home`), so `~/.claude`, `~/.config/opencode` and their auth
 persist across restarts — log in once with `claude` / `opencode auth login`. Or pass keys via
@@ -61,7 +103,7 @@ ANTHROPIC_API_KEY=sk-ant-…
 OPENAI_API_KEY=sk-…
 ```
 
-## Plain `docker run` (no compose)
+### Plain `docker run` (no compose)
 
 ```sh
 docker run -d --name box --restart unless-stopped \
@@ -71,20 +113,25 @@ docker run -d --name box --restart unless-stopped \
 docker exec -it box zsh
 ```
 
-## What's inside
-
-| Tool | Use |
-|---|---|
-| `claude` | Claude Code CLI |
-| `opencode` | opencode agent CLI (overnight runs) |
-| `node` / `npm` / `npx` | Node 22 |
-| `python3` / `uv` | Python + fast package/dep manager (`uv run`) |
-| `npx playwright` | Playwright + headless Chromium (browser automation) |
-| `screen` | detach/reattach long-running sessions |
-
-## Files
+### Files
 
 - [`Dockerfile`](Dockerfile) — the image recipe
 - [`entrypoint.sh`](entrypoint.sh) — runtime startup (banner, then hands off to CMD)
 - [`screenrc`](screenrc) — screen config tuned for long sessions (big scrollback, status line)
 - [`docker-compose.yml`](docker-compose.yml) — long-running box, one command
+
+---
+
+## What's inside
+
+| Tool | Devcontainer | Standalone box |
+|---|:---:|:---:|
+| `claude` (Claude Code) | ✅ | ✅ |
+| `opencode` | ✅ | ✅ |
+| `node` / `npm` / `npx` (Node 22) | ✅ | ✅ |
+| `python3` / `uv` | ✅ | ✅ |
+| `npx playwright` + Chromium | ✅ | ✅ |
+| `screen` | ✅ | ✅ |
+| Supabase CLI, Stripe CLI, psql | ✅ | — |
+| headroom | ✅ | — |
+| docker-in-docker (`supabase start`) | ✅ | — |

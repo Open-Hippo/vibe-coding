@@ -1,27 +1,31 @@
-# Vibe Coding — Workshop Onboarding
+# Vibe Coding — Workshop
 
-Welcome! In this workshop we build real software with AI coding agents. You'll set
-up two of them:
+Build real software by *talking* to an AI coding agent. In this workshop you'll get one (or
+both) running in ~10 minutes, powered by **free [OpenHippo](https://openhippo.io) models** — no
+paid subscription needed.
+
+Two agents, same idea — you type what you want, they edit and run your code:
 
 - **[Claude Code](https://code.claude.com/docs)** — Anthropic's coding agent (CLI + IDE).
-- **[opencode](https://opencode.ai/docs)** — an open-source coding agent.
+- **[opencode](https://opencode.ai/docs)** — an open-source coding agent (CLI + IDE).
 
-You can run both against free **[OpenHippo](https://openhippo.io)** models — no
-Anthropic subscription required. Setup takes ~10 minutes.
-
-Each tool comes as a **CLI** (runs in your terminal) and an **IDE extension**
-(runs inside your editor). Install whichever you prefer — or both.
+> **New here? Do this:** clone this repo, then follow steps 1–4 below with **one** agent.
+> ```sh
+> git clone https://github.com/open-hippo/vibe-coding && cd vibe-coding
+> ```
 
 ---
 
-## 1. Install Claude Code
+## 1. Get your free key
 
-📖 **Install pages — pick your platform:**
-[CLI setup](https://code.claude.com/docs/en/setup) ·
-[VS Code extension](https://code.claude.com/docs/en/vs-code) ·
-[JetBrains plugin](https://code.claude.com/docs/en/jetbrains)
+1. Register at **[openhippo.io](https://openhippo.io)** and copy your **API token**.
+2. Keep it handy — both agents just need this token + the OpenHippo URL.
 
-### CLI
+---
+
+## 2. Run Claude Code
+
+**Install the CLI** ([other options](https://code.claude.com/docs/en/setup)):
 
 | Platform | Command |
 | --- | --- |
@@ -29,74 +33,7 @@ Each tool comes as a **CLI** (runs in your terminal) and an **IDE extension**
 | Linux | `curl -fsSL https://claude.ai/install.sh \| bash` |
 | Windows (PowerShell) | `irm https://claude.ai/install.ps1 \| iex` |
 
-Verify: `claude --version`
-
-### IDE extension
-
-- **VS Code / Cursor:** open Extensions (`Ctrl/Cmd+Shift+X`), search **"Claude
-  Code"**, click **Install**. Then click the **Spark icon** (top-right of the editor).
-- **JetBrains (IntelliJ / PyCharm):** install the CLI above first, then
-  **Settings → Plugins → Marketplace**, search **"Claude Code"**, **Install**, and
-  restart the IDE. Run `claude` in the integrated terminal (or press `Ctrl/Cmd+Esc`).
-
----
-
-## 2. Install opencode
-
-📖 **Download page — CLI, desktop app, and editor extensions:**
-**[opencode.ai/download](https://opencode.ai/download)** ·
-[IDE integrations](https://opencode.ai/docs/ide/)
-
-### CLI
-
-| Platform | Command |
-| --- | --- |
-| macOS | `brew install anomalyco/tap/opencode` |
-| Linux | `curl -fsSL https://opencode.ai/install \| bash` |
-| Windows (PowerShell) | `scoop install opencode`  _(or `npm i -g opencode-ai`)_ |
-
-### IDE extension
-
-opencode has extensions for **VS Code, Cursor, Zed, Windsurf, and VSCodium** —
-install from your editor's marketplace or via
-[opencode.ai/download](https://opencode.ai/download). Or just run `opencode` in
-your editor's integrated terminal.
-
----
-
-## 3. Get free OpenHippo models
-
-1. Register for free at **[openhippo.io](https://openhippo.io)**.
-2. Copy your **API token**.
-
-OpenHippo speaks the Anthropic API, so both agents work with just a URL, your
-token, and a model name.
-
-### Claude Code + OpenHippo
-
-Replace `<YOUR-HIPPO-API-TOKEN>` with your token.
-
-**macOS / Linux:**
-
-```bash
-ANTHROPIC_BASE_URL=https://api.openhippo.io \
-ANTHROPIC_AUTH_TOKEN=<YOUR-HIPPO-API-TOKEN> \
-ANTHROPIC_MODEL=hippo-coding \
-ANTHROPIC_SMALL_FAST_MODEL=hippo-chat-large \
-claude
-```
-
-**Windows (PowerShell):**
-
-```powershell
-$env:ANTHROPIC_BASE_URL="https://api.openhippo.io"
-$env:ANTHROPIC_AUTH_TOKEN="<YOUR-HIPPO-API-TOKEN>"
-$env:ANTHROPIC_MODEL="hippo-coding"
-$env:ANTHROPIC_SMALL_FAST_MODEL="hippo-chat-large"
-claude
-```
-
-To avoid retyping, save it once in `~/.claude/settings.json`
+**Point it at OpenHippo** — paste your token into `~/.claude/settings.json`
 (Windows: `%USERPROFILE%\.claude\settings.json`):
 
 ```json
@@ -110,80 +47,62 @@ To avoid retyping, save it once in `~/.claude/settings.json`
 }
 ```
 
-Then just run `claude` (the IDE extension reads the same settings).
+**Start it** — from your project folder:
 
-### opencode + OpenHippo
-
-Save this as `opencode.json` in your project folder:
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "provider": {
-    "openhippo": {
-      "npm": "@ai-sdk/anthropic",
-      "name": "OpenHippo",
-      "options": {
-        "baseURL": "https://api.openhippo.io/v1",
-        "apiKey": "{env:HIPPO_API_TOKEN}"
-      },
-      "models": {
-        "hippo-coding": { "name": "Hippo Coding" },
-        "hippo-chat-large": { "name": "Hippo Chat Large" }
-      }
-    }
-  },
-  "model": "openhippo/hippo-coding"
-}
+```sh
+claude
 ```
 
-Then set your token and launch:
+_Prefer your editor? Install the **"Claude Code"** extension (VS Code / Cursor / JetBrains) — it
+reads the same settings. See [IDE setup](https://code.claude.com/docs/en/vs-code)._
 
-```bash
-export HIPPO_API_TOKEN=<YOUR-HIPPO-API-TOKEN>   # PowerShell: $env:HIPPO_API_TOKEN="..."
+---
+
+## 3. Run opencode
+
+**Install the CLI** ([other options](https://opencode.ai/download)):
+
+| Platform | Command |
+| --- | --- |
+| macOS | `brew install anomalyco/tap/opencode` |
+| Linux | `curl -fsSL https://opencode.ai/install \| bash` |
+| Windows (PowerShell) | `scoop install opencode`  _(or `npm i -g opencode-ai`)_ |
+
+**Point it at OpenHippo** — this repo already ships a ready [`opencode.json`](opencode.json), so
+you just set your token and go:
+
+```sh
+export OPENAI_API_KEY=<YOUR-HIPPO-API-TOKEN>   # PowerShell: $env:OPENAI_API_KEY="..."
 opencode
 ```
 
----
-
-## 4. Turn off tracking & telemetry (Claude Code)
-
-Claude Code never trains on your code, but it does send usage telemetry and error
-reports by default. To turn that off, add these to the `env` block in
-`~/.claude/settings.json` (Windows: `%USERPROFILE%\.claude\settings.json`):
-
-```json
-{
-  "env": {
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
-    "DISABLE_TELEMETRY": "1",
-    "DISABLE_ERROR_REPORTING": "1"
-  }
-}
-```
-
-`CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` is the master switch — it disables
-telemetry, error reporting, and auto-update checks in one go.
-
-_(opencode is open-source and sends no telemetry.)_
+_Run it from the repo folder so opencode picks up that config. opencode also has extensions for
+VS Code, Cursor, Zed, and more._
 
 ---
 
-## Try it out
+## 4. Your first session
 
-From your project folder, run `claude` (or `opencode`) and ask:
+Inside `claude` or `opencode`, just ask in plain language:
 
 ```text
 > explain what this project does
 > add a hello-world script and run it
 ```
 
-Useful commands: `/model` (switch model), `/help` (all commands).
+Handy while you're in a session: **`/model`** switch model · **`/help`** all commands.
+
+That's it — you're vibe coding. 🎧
 
 ---
 
-## Docs & help
+## Going further
 
-- Claude Code: https://code.claude.com/docs
-- opencode: https://opencode.ai/docs
-- Stuck? Run `claude doctor`, or grab a facilitator. Happy vibe coding! 🎧
+- **Prebuilt environments** (nothing to install by hand — devcontainer for VS Code, or a
+  standalone Docker box for remote/overnight agent runs): [`docker/README.md`](docker/README.md).
+- **Workshop slides:** [`docs/`](docs/Vibe-Programming-Workshop-Slides.pdf).
+- **Turn off Claude Code telemetry** (optional): add `"CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"`
+  to the `env` block in `~/.claude/settings.json` — one switch for telemetry, error reports, and
+  auto-update checks. _(opencode is open-source and sends no telemetry.)_
+- **Docs & help:** [Claude Code](https://code.claude.com/docs) · [opencode](https://opencode.ai/docs).
+  Stuck? Run `claude doctor`, or grab a facilitator.
