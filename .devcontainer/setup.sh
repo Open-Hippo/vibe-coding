@@ -50,6 +50,16 @@ else
   log "claude already present: $(claude --version 2>/dev/null || echo '?')"
 fi
 
+# --- opencode (alternative AI coding agent CLI) ------------------------------------------
+# Installs into the user-owned npm-global prefix set above, so it lands on PATH with no sudo
+# and self-updates cleanly. Binary is `opencode`; the npm package is `opencode-ai`.
+if ! command -v opencode >/dev/null 2>&1; then
+  log "Installing opencode CLI"
+  npm install -g opencode-ai
+else
+  log "opencode already present: $(opencode --version 2>/dev/null || echo '?')"
+fi
+
 # --- uv (repo uses `uv run` for python/pytest) -------------------------------------------
 if ! command -v uv >/dev/null 2>&1; then
   log "Installing uv"
