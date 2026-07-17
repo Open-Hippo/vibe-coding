@@ -80,21 +80,3 @@ if ! npm ls -g playwright >/dev/null 2>&1; then
 else
   log "Playwright already present"
 fi
-
-# --- headroom-ai (context caching/compression for Claude Code) ---------------------------
-# Not a Python lib we import — it's the mechanism that compresses + retrieves Claude's tool
-# output (ships the ~/.headroom/bin/rtk binary). Installed system-wide (global python, not a
-# venv) so any Claude session in the container picks it up. rtk needs glibc >= 2.39 — that's
-# why the Dockerfile base is Trixie, not Bookworm.
-#
-# Extras (NOT [all] — that pulls torch/CUDA via ml/voice/image, which we don't need):
-#   proxy       - the compression/caching mechanism itself (CPU onnxruntime, no torch)
-#   mcp         - MCP server support
-#   spreadsheet - Excel parsing (openpyxl/xlrd)
-#   code        - tree-sitter parsers, powers --code-graph
-if ! command -v headroom >/dev/null 2>&1; then
-  log "Installing headroom-ai[proxy,mcp,spreadsheet,code] (system-wide)"
-  pip install -U "headroom-ai[proxy,mcp,spreadsheet,code]"
-else
-  log "headroom already present: $(headroom --version 2>/dev/null || echo '?')"
-fi
