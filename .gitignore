@@ -1,0 +1,8 @@
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+
+# Devcontainer secrets (Stripe test creds) — commit only the .example template
+.devcontainer/sandbox.env
+!.devcontainer/sandbox.env.example

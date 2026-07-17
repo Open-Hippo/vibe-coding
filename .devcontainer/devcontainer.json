@@ -1,0 +1,50 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/python
+{
+	"name": "Python 3",
+	// Build the image locally from .devcontainer/Dockerfile (the original Python base:
+	// mcr.microsoft.com/devcontainers/python:3.12-trixie). This does NOT pull the pre-built
+	// image published to GHCR.
+	"build": { "dockerfile": "Dockerfile" },
+	// To use the pre-built GHCR image instead (skips the local build), replace the
+	// "build" line above with:
+	//   "image": "ghcr.io/open-hippo/vibe-coding/devcontainer:latest"
+
+	// Docker-in-Docker so `supabase start` can run the full local Supabase stack
+	// (Postgres + edge runtime + Realtime + Studio) inside the container, reachable at
+	// localhost:54321. The sandbox uses LOCAL Supabase — no remote project, no DB password.
+	"features": {
+		// moby:false -> install Docker CE from Docker's own apt repo instead of the
+		// open-source "moby" packages. moby-cli isn't published for Debian trixie (our
+		// base image), so the default moby:true aborts the feature install. Docker CE
+		// gives the same `docker`/`compose` CLIs and works on trixie.
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"moby": false
+		}
+	},
+
+	// Keep the container running when the VS Code window closes or the connection drops.
+	// Default for an image/Dockerfile container is "stopContainer", which would kill any
+	// unattended `screen`/`claude` session on disconnect. "none" lets it run until the host
+	// (Docker Desktop) stops or the container is removed explicitly.
+	"shutdownAction": "none",
+
+	// Put the user-owned toolchain bins on PATH for EVERY terminal and process, regardless of
+	// shell type. setup.sh also appends to .bashrc/.zshrc/.profile as a fallback, but this
+	// remoteEnv is the shell-agnostic belt-and-suspenders. NOTE: the home dir is hard-coded to
+	// /home/vscode on purpose — ${containerEnv:HOME} can resolve to EMPTY at eval time, which
+	// silently produced a broken `/.npm-global/bin` PATH and left `claude` unfindable.
+	"remoteEnv": {
+		"PATH": "/home/vscode/.npm-global/bin:/home/vscode/.local/bin:${containerEnv:PATH}"
+	},
+
+	// Install the sandbox toolchain (Node/npx, claude, uv, supabase, stripe, Playwright).
+	// All logic lives in setup.sh so this file stays minimal; the script is idempotent.
+	"postCreateCommand": "bash .devcontainer/setup.sh",
+
+	// Stripe TEST creds come from a git-ignored env file (Supabase is local — no remote creds).
+	// Copy sandbox.env.example -> sandbox.env and fill it BEFORE opening the container
+	// (the file must exist or container creation fails). Claude auth is intentionally NOT
+	// here — you start the claude session yourself on your subscription.
+	"runArgs": ["--env-file", "${localWorkspaceFolder}/.devcontainer/sandbox.env"]
+}

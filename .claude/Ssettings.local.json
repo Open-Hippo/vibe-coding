@@ -1,0 +1,8 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://staging.api.openhippo.io",
+    "ANTHROPIC_AUTH_TOKEN": "hk_live_c9120f55ed1449cf97be48eae21de062",
+    "ANTHROPIC_MODEL": "moonshotai/Kimi-K2.7-Code-1100B",
+    "ANTHROPIC_SMALL_FAST_MODEL": "MiniMaxAI/MiniMax-M2.5"
+  }
+}
