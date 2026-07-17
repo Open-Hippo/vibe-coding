@@ -100,6 +100,7 @@ That's it — you're vibe coding. 🎧
 
 - **Prebuilt environments** (nothing to install by hand — devcontainer for VS Code, or a
   standalone Docker box for remote/overnight agent runs): [`docker/README.md`](docker/README.md).
+- **Video walkthroughs:** [part 1](https://www.youtube.com/watch?v=zuyvcxNR_RE) · [part 2](https://www.youtube.com/watch?v=Uhf9JDsKao0).
 - **Workshop slides:** [`docs/`](docs/Vibe-Programming-Workshop-Slides.pdf).
 - **Turn off Claude Code telemetry** (optional): add `"CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"`
   to the `env` block in `~/.claude/settings.json` — one switch for telemetry, error reports, and
