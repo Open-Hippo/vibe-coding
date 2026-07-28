@@ -256,20 +256,38 @@ your host is Windows and you'd rather not have the agent anywhere near it.
 Workstation Pro. And note VirtualBox gets noticeably slower once WSL2/Docker Desktop has switched
 the machine onto the Hyper-V platform.
 
-**The recipe** — plan an evening the first time; the Ubuntu ISO alone is ~6 GB:
+#### Step by step with VMware
 
-1. Create a VM with [Ubuntu LTS](https://ubuntu.com/download/desktop) — at least 4 CPU / 8 GB RAM / 60 GB disk.
-2. Turn **off** shared folders and clipboard sharing. Those conveniences are exactly the holes
-   you're paying a VM to close.
-3. Inside the VM install Docker, VS Code and the agent — then run Option A's devcontainer in
-   there. Container-inside-VM costs you nothing extra.
-4. **Take a snapshot of the clean state.** That's the whole point: after a run that went weird,
-   roll back in seconds instead of wondering what changed.
-5. Put only what the task needs in there — one repo, one throwaway token, no personal keys.
+On **Windows** this is **Workstation Pro**; on a **Mac** it's **Fusion**. The windows look
+slightly different, the steps are the same. Plan an evening the first time — the downloads alone
+are ~7 GB.
+
+1. **Get the installer.** Both live behind a free Broadcom account at
+   [support.broadcom.com](https://knowledge.broadcom.com/external/article/368667/download-and-license-vmware-desktop-hype.html)
+   → *VMware Cloud Foundation* → *My Downloads* → **VMware Workstation Pro** (or **Fusion**).
+   No licence key needed since the November 2024 change. Install it, reboot.
+2. **Download [Ubuntu LTS Desktop](https://ubuntu.com/download/desktop)** — one `.iso` file,
+   ~6 GB. Put it somewhere you'll find it again.
+3. **Create the VM.** *File → New Virtual Machine* → point it at the `.iso` → let it use the
+   easy install → give it at least **4 CPUs, 8 GB RAM, 60 GB disk**. Then click through the
+   Ubuntu installer inside the VM window like you would on a real machine.
+4. **Close the convenient holes.** In the VM's settings, turn **off** shared folders and
+   drag-and-drop / clipboard sharing. They're exactly what you're paying a VM to prevent.
+   (Fusion: *Settings → Sharing*. Workstation: *VM → Settings → Options*.)
+5. **Install what you need, inside the VM:** Docker, VS Code, and the agent — then run Option A's
+   devcontainer in there. A container inside a VM costs you nothing extra and stacks the boxes.
+6. **Take a snapshot** — *VM → Snapshot → Take Snapshot*, call it `clean`. This is the payoff:
+   after a run that went sideways, *Revert to Snapshot* puts you back in seconds instead of
+   leaving you guessing what changed.
+7. **Keep it lean.** One repo, one throwaway token, no personal SSH keys or cloud logins.
+
+> **Windows only:** if you've enabled WSL2 or Docker Desktop, Windows has already switched on
+> Hyper-V. Recent Workstation Pro versions run fine alongside it, but a little slower. If VMs
+> refuse to start, that's the first thing to look at.
 
 One thing to be clear about: **WSL2 is not a VM in this sense.** It's a great place to run
 Docker, but it can see your Windows files through `/mnt/c`, so it doesn't protect them. Use it
-for Option A, and a real VM when you want Option B.
+for Option A, and a real VM when you want Option B. WSL2 is just an option for isolation in combination with a devcontainer setup.
 
 ### Before you go hands-off
 
