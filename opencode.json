@@ -1,37 +1,34 @@
 {
   "$schema": "https://opencode.ai/config.json",
-
   "provider": {
-    "openhippo": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Open Hippo",
+    "hippo": {
+      "npm": "@ai-sdk/anthropic",
+      "name": "Hippo B2B",
       "options": {
-        "baseURL": "https://api.openhippo.io",
-        "apiKey": "{env:OPENAI_API_KEY}"
+        "baseURL": "https://b2b.openhippo.io/v1",
+        "apiKey": "{env:HIPPO_API_KEY}"
       },
       "models": {
-        "qwen/Qwen3.6-27B": {
-          "name": "qwen/Qwen3.6-27B"
-        }
+        "aki-io/qwen3.8-27b": { "name": "qwen3.8-27b" },
+        "aki-io/deepseek-v4-flash-0731-284b": { "name": "deepseek-v4-flash" },
+        "aki-io/kimi-k2.7-code-1100b": { "name": "kimi-k2.7-code" }
       }
     }
   },
-
-  "model": "openhippo/qwen/Qwen3.6-27B",
-
+  "model": "hippo/aki-io/deepseek-v4-flash-0731-284b",
   "agent": {
     "deep": {
       "description": "Heavy reasoning / complex work",
-      "model": "openhippo/qwen/Qwen3.6-27B"
+      "model": "hippo/aki-io/kimi-k2.7-code-1100b"
     },
     "fast": {
       "description": "Quick edits / lightweight work",
-      "model": "openhippo/qwen/Qwen3.6-27B"
+      "model": "hippo/aki-io/deepseek-v4-flash-0731-284b"
     },
     "explorer": {
       "mode": "subagent",
       "description": "Use for reading files, searching the codebase, grepping, and gathering context. Delegate all file-exploration and lookup work here.",
-      "model": "openhippo/qwen/Qwen3.6-27B"
+      "model": "hippo/aki-io/deepseek-v4-flash-0731-284b"
     }
   }
 }
